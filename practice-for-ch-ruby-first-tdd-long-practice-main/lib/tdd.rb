@@ -4,7 +4,7 @@ def my_uniq(arr)
         hash[ele] += 1
     end
 
-    hash.keys 
+    hash.keys
 
 end
 
@@ -40,7 +40,7 @@ def stock_picker(arr)
     (0...arr.length).each do |ele|
         (ele+1...arr.length).each do |i|
             if arr[i] - arr[ele] >= profit
-                profit = arr[i] - arr[ele] 
+                profit = arr[i] - arr[ele]
                 res = [ele, i]
             end
         end
@@ -50,10 +50,42 @@ end
 
 class Hanoi
 
-    attr_reader
+    attr_reader :board
     def initialize(size)
-        @left = (0..size).to_a.reverse # array from size - 0
-        @right = []
-        @middle = []
+        @size = size
+        @board = [(0...size).to_a.reverse, [], []] # array from size - 0
+    end
+
+    def move(initial_pos, end_pos) #0 = left, 1 = middle, 2 = right
+        raise "Invalid Move" if invalid?(initial_pos, end_pos)
+        holder = board[initial_pos].pop
+        board[end_pos] << holder
+    end
+
+    def invalid?(start_pos, end_pos)
+        return true if board[start_pos].empty?
+        return board[end_pos].last < board[start_pos].last unless board[end_pos].empty?
+        false
+    end
+
+    def won? #hboard
+        return false if board[0].length != 0 || board[1].length != 0
+        return false if board[2].length != @size
+        p board
+        true
+    end
+
+    def play
+        while !won?
+            puts "input start val, end val"
+            val = gets.chomp
+            s, e = val.split(",")
+            self.move(s.to_i, e.to_i)
+            p " #{board[0]}, #{board[1]}, #{board[2]}"
+        end
+        puts 'game over'
     end
 end
+
+# h = Hanoi.new(3)
+# h.play
